@@ -47,7 +47,7 @@ cat ~/.ssh/id_rsa.pub
 echo public_key_string >> ~/.ssh/authorized_keys
 ```
 
-replace public_key_string with the copied key from the 'cat ~/.ssh/id_rsa.pub' command
+replace public_key_string with the copied key from the 'cat ~/.ssh/id_rsa.pub' command and then login using the command below:
 
 ```
 ssh ubuntu@your-ip-address
