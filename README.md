@@ -37,7 +37,7 @@ Login to http://your-ip:8080 to see if concourse works. There should be a page l
 
 Congrats! Concourse Ci is set up. 
 
-## Setting up SSH connection between discord bot server concourse ci server
+## Setting up SSH connection between discord bot server and concourse ci server
 
 ```
 ssh-keygen
@@ -47,7 +47,7 @@ cat ~/.ssh/id_rsa.pub
 echo public_key_string >> ~/.ssh/authorized_keys
 ```
 
-replace public_key_string with the cat ~/.ssh/id_rsa.pub
+replace public_key_string with the copied key from the 'cat ~/.ssh/id_rsa.pub' command
 
 ```
 ssh ubuntu@your-ip-address
