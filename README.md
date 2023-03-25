@@ -52,3 +52,11 @@ replace public_key_string with the copied key from the 'cat ~/.ssh/id_rsa.pub' c
 ```
 ssh ubuntu@your-ip-address
 ```
+
+## Set up git(hub) on your concourse ci server
+
+Install Git on the concourse ci server: 
+```
+sudo apt update -y
+sudo apt install git
+```
