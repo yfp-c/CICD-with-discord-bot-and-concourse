@@ -60,3 +60,10 @@ Install Git on the concourse ci server:
 sudo apt update -y
 sudo apt install git
 ```
+
+## Configure your GitHub name and email:
+```
+git config --global user.name "Actual Name"
+git config --global user.email "github@example.com"
+```
+
