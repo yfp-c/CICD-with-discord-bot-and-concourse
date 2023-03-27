@@ -61,9 +61,22 @@ sudo apt update -y
 sudo apt install git
 ```
 
-## Configure your GitHub name and email:
+### Configure your GitHub name and email:
 ```
 git config --global user.name "Actual Name"
 git config --global user.email "github@example.com"
+```
+### Generate a SSH key-pair and add a comment so you can identify it
+```
+ssh-keygen -t ed25519 -c "github-email@email.com"
+```
+### Add ssh key to ssh-agent
+```
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
+### Either cd into the .ssh directory or the below and copy the public key: 
+```
+cat ~/.ssh/id_ed25519.pub
 ```
 
