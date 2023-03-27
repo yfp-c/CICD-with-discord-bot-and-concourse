@@ -79,4 +79,9 @@ ssh-add ~/.ssh/id_ed25519
 ```
 cat ~/.ssh/id_ed25519.pub
 ```
-
+Add the SSH public key to your GitHub account at https://github.com/settings/keys
+and then test the connection by doing
+```
+ssh -T git@github.com
+```
+and you should get a message saying "Hi github-user! You've successfully authenticated, but GitHub does not provide shell access."
