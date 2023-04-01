@@ -6,17 +6,16 @@
     + [Generate a SSH key-pair and add a comment so you can identify it](#generate-a-ssh-key-pair-and-add-a-comment-so-you-can-identify-it)
     + [Add ssh key to ssh-agent](#add-ssh-key-to-ssh-agent)
     + [Either cd into the .ssh directory or the below and copy the public key:](#either-cd-into-the-ssh-directory-or-the-below-and-copy-the-public-key-)
-  * [Create pipeline job to test connection between concourse and github](#create-pipeline-job-to-test-connection-between-concourse-and-github)
+  * [Create concourse job to test connection between concourse and github](#create-concourse-job-to-test-connection-between-concourse-and-github)
     + [Make sure a few things are set up](#make-sure-a-few-things-are-set-up)
     + [set up yaml file](#set-up-yaml-file)
     + [Export private key into pipeline](#export-private-key-into-pipeline)
     + [Set pipeline](#set-pipeline)
     + [Trigger pipeline](#trigger-pipeline)
-  * [Create concourse job to connect to discord server using concourse](#create-concourse-job-to-connect-to-discord-server-using-concourse)
+  * [Create concourse job to connect to discord server](#create-concourse-job-to-connect-to-discord-server)
     + [Modify yml file to connect concourse ci to discord bot server](#modify-yml-file-to-connect-concourse-ci-to-discord-bot-server)
     + [export new ssh private key into env variable](#export-new-ssh-private-key-into-env-variable)
     + [set pipeline and trigger job](#set-pipeline-and-trigger-job)
-
 
 # CICD-with-discord-bot-and-concourse-on-oracle
 I will attempt to do an end to end pipeline with the discord bot I have created using concourse as my pipeline
@@ -106,7 +105,7 @@ ssh -T git@github.com
 ```
 and you should get a message saying "Hi github-user! You've successfully authenticated, but GitHub does not provide shell access."
 
-## Create pipeline job to test connection between concourse and github
+## Create concourse job to test connection between concourse and github
 
 ### Make sure a few things are set up
 - If you're running concourse on docker, ensure it is running the concourse image (if you've forgotten it is docker-compose up -d)
@@ -167,7 +166,7 @@ If all is good, you might see something similar to this:
 
 <img width="500" alt="Screenshot 2023-04-01 at 11 57 07" src="https://user-images.githubusercontent.com/98178943/229284782-d430181e-4e22-4d7a-9be4-a35e337ef2a1.png">
 
-## Create concourse job to connect to discord server using concourse
+## Create concourse job to connect to discord server
 HIGHLY RECOMMEND to create new ssh key-pair using something like:
 ```
 ssh-keygen -t rsa -b 4096
