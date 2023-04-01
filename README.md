@@ -144,4 +144,5 @@ If this is your first time opening the concourse ci ui and logging into it, it w
 fly -t ci trigger-job -j sbot-pipeline/sync-and-push
 ```
 If all is good, you might see something similar to this:
+
 <img width="500" alt="Screenshot 2023-04-01 at 11 57 07" src="https://user-images.githubusercontent.com/98178943/229284782-d430181e-4e22-4d7a-9be4-a35e337ef2a1.png">
