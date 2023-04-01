@@ -86,7 +86,7 @@ ssh -T git@github.com
 ```
 and you should get a message saying "Hi github-user! You've successfully authenticated, but GitHub does not provide shell access."
 
-## Create pipeline build to test connection between concourse and github
+## Create pipeline job to test connection between concourse and github
 
 ### Make sure a few things are set up
 - If you're running concourse on docker, ensure it is running the concourse image (if you've forgotten it is docker-compose up -d)
@@ -146,3 +146,77 @@ fly -t ci trigger-job -j sbot-pipeline/sync-and-push
 If all is good, you might see something similar to this:
 
 <img width="500" alt="Screenshot 2023-04-01 at 11 57 07" src="https://user-images.githubusercontent.com/98178943/229284782-d430181e-4e22-4d7a-9be4-a35e337ef2a1.png">
+
+## Create concourse job to connect to discord server using concourse
+HIGHLY RECOMMEND to create new ssh key-pair using something like:
+```
+ssh-keygen -t rsa -b 4096
+```
+Display the public key:
+```
+cat ~/.ssh/your_public_key.pub
+```
+Copy contents to ~/.ssh/authorized_keys and save.
+
+It took me HOURS to figure out issues, hours wasted of googling and going through logs etc. My concourse job was connecting to my discordbot server but it wasn't going through at the last stage. All I had to do was make a new ssh key-pair!
+
+### Modify yml file to connect concourse ci to discord bot server
+```
+resources:
+- name: sbot-repo
+  type: git
+  source:
+    uri: <your-github-repo-can-be-found-on-your-repo-page-click-the-green-link-and-copy-url->
+    branch: <enter-repo-branch>
+    private_key: ((SSH_PRIVATE_KEY))
+
+jobs:
+- name: pull-repo-and-test-ssh
+  public: true
+  plan:
+  - get: sbot-repo
+    trigger: true
+  - task: display-git-info-and-test-ssh
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: ubuntu
+      params:
+        DISCORD_BOT_SERVER_IP: ((DISCORD_SERVER_IP))
+        DISCORD_BOT_SERVER_SSH_KEY: ((DISCORD_BOT_SERVER_SSH_KEY))
+      inputs:
+      - name: sbot-repo
+      run:
+        path: bash
+        args:
+        - -c
+        - |
+          apt-get update
+          apt-get install -y git openssh-client
+          echo "Git repository information:"
+          cd sbot-repo
+          git --no-pager log -1
+
+          echo "Testing SSH connection to the Discord sbot server"
+          echo "$DISCORD_BOT_SERVER_SSH_KEY" > id_rsa_discord_bot
+          chmod 600 id_rsa_discord_bot
+          ssh-keyscan $DISCORD_BOT_SERVER_IP >> known_hosts
+	  # adding to knownhosts to avoid host authentication but it is still secure compared to 'ssh stricthostkeychecking no'
+          ssh -v -i id_rsa_discord_bot -o UserKnownHostsFile=known_hosts ubuntu@$DISCORD_BOT_SERVER_IP 'echo "Connected to the Discord bot server"'
+	  # verbose option to troubleshoot if needed
+```
+### export new ssh private key into env variable
+```
+export DISCORD_BOT_SERVER_SSH_KEY="$(cat path-to-private-key)"
+```
+### set pipeline and trigger job
+```
+fly -t <target-name> set-pipeline -p <name-of-pipeline> -c path-to.yml -v SSH_PRIVATE_KEY="$(cat path-to-private-key)" -v DISCORD_BOT_SERVER_SSH_KEY="$(cat path-to-private-key)"
+
+fly -t ci trigger-job -j sbot-pipeline/pull-repo-and-test-ssh
+```
+Hopefully you'll see a successful build such as the below
+
+<img width="800" alt="Screenshot 2023-04-01 at 11 57 07" src="https://user-images.githubusercontent.com/98178943/229295181-f2ed38f2-5f4a-4072-ab95-9b47ba2a6088.png">
