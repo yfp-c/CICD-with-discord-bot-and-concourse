@@ -1,3 +1,24 @@
+- [CICD-with-discord-bot-and-concourse-on-oracle](#cicd-with-discord-bot-and-concourse-on-oracle)
+  * [Set up concourse on a new ubuntu oracle server](#set-up-concourse-on-a-new-ubuntu-oracle-server)
+  * [Setting up SSH connection between discord bot server and concourse ci server](#setting-up-ssh-connection-between-discord-bot-server-and-concourse-ci-server)
+  * [Set up git(hub) on your concourse ci server](#set-up-git-hub--on-your-concourse-ci-server)
+    + [Configure your GitHub name and email:](#configure-your-github-name-and-email-)
+    + [Generate a SSH key-pair and add a comment so you can identify it](#generate-a-ssh-key-pair-and-add-a-comment-so-you-can-identify-it)
+    + [Add ssh key to ssh-agent](#add-ssh-key-to-ssh-agent)
+    + [Either cd into the .ssh directory or the below and copy the public key:](#either-cd-into-the-ssh-directory-or-the-below-and-copy-the-public-key-)
+  * [Create pipeline job to test connection between concourse and github](#create-pipeline-job-to-test-connection-between-concourse-and-github)
+    + [Make sure a few things are set up](#make-sure-a-few-things-are-set-up)
+    + [set up yaml file](#set-up-yaml-file)
+    + [Export private key into pipeline](#export-private-key-into-pipeline)
+    + [Set pipeline](#set-pipeline)
+    + [Trigger pipeline](#trigger-pipeline)
+  * [Create concourse job to connect to discord server using concourse](#create-concourse-job-to-connect-to-discord-server-using-concourse)
+    + [Modify yml file to connect concourse ci to discord bot server](#modify-yml-file-to-connect-concourse-ci-to-discord-bot-server)
+    + [export new ssh private key into env variable](#export-new-ssh-private-key-into-env-variable)
+    + [set pipeline and trigger job](#set-pipeline-and-trigger-job)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 # CICD-with-discord-bot-and-concourse-on-oracle
 I will attempt to do an end to end pipeline with the discord bot I have created using concourse as my pipeline
 
