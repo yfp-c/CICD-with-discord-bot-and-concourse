@@ -17,7 +17,6 @@
     + [export new ssh private key into env variable](#export-new-ssh-private-key-into-env-variable)
     + [set pipeline and trigger job](#set-pipeline-and-trigger-job)
 
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
 # CICD-with-discord-bot-and-concourse-on-oracle
 I will attempt to do an end to end pipeline with the discord bot I have created using concourse as my pipeline
