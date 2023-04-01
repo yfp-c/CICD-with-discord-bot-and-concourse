@@ -219,4 +219,4 @@ fly -t ci trigger-job -j sbot-pipeline/pull-repo-and-test-ssh
 ```
 Hopefully you'll see a successful build such as the below
 
-<img width="800" alt="Screenshot 2023-04-01 at 11 57 07" src="https://user-images.githubusercontent.com/98178943/229295181-f2ed38f2-5f4a-4072-ab95-9b47ba2a6088.png">
+<img width="1085" alt="Screenshot 2023-04-01 at 15 27 27" src="https://user-images.githubusercontent.com/98178943/229295216-f33cf538-436a-46a7-8567-e0ecfe5579dc.png">
