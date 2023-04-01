@@ -85,3 +85,63 @@ and then test the connection by doing
 ssh -T git@github.com
 ```
 and you should get a message saying "Hi github-user! You've successfully authenticated, but GitHub does not provide shell access."
+
+## Create pipeline build to test connection between concourse and github
+
+### Make sure a few things are set up
+- If you're running concourse on docker, ensure it is running the concourse image (if you've forgotten it is docker-compose up -d)
+- Open ports for your ip for ports 80,8080 etc and open ports for your concourse server's ip to 8080
+
+### set up yaml file
+```
+resources:
+- name: sbot-repo
+  type: git
+  source:
+    uri: <your-github-repo-can-be-found-on-your-repo-page-click-the-green-link-and-copy-url->
+    branch: <enter-repo-branch>
+    private_key: ((SSH_PRIVATE_KEY))
+
+jobs:
+- name: pull-repo
+  public: true
+  plan:
+  - get: sbot-repo
+    trigger: true
+  - task: display-git-info
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: ubuntu
+      inputs:
+      - name: sbot-repo
+      run:
+        path: bash
+        args:
+        - -c
+        - |
+          apt-get update
+          apt-get install -y git
+          echo "Git repository information:"
+          cd sbot-repo
+		  git --no-pager log -1
+```
+### Export private key into pipeline
+```
+export SSH_PRIVATE_KEY="$(cat /home/ubuntu/.ssh/id_rsa)"
+```
+### Set pipeline
+```
+fly -t <target-name> set-pipeline -p <pipeline-name> -c <path-to.yml> --var "SSH_PRIVATE_KEY=$(echo $SSH_PRIVATE_KEY)"
+e.g. fly -t ci set-pipeline -p sbot-pipeline -c sbot_pipeline.yml --var "SSH_PRIVATE_KEY=$(echo $SSH_PRIVATE_KEY)"
+```
+If this is your first time opening the concourse ci ui and logging into it, it will prompt you to enter a token. Open the link it gives and copy the token in to access the gui.
+
+### Trigger pipeline
+```
+fly -t ci trigger-job -j sbot-pipeline/sync-and-push
+```
+If all is good, you might see something similar to this:
+<img width="500" alt="Screenshot 2023-04-01 at 11 57 07" src="https://user-images.githubusercontent.com/98178943/229284782-d430181e-4e22-4d7a-9be4-a35e337ef2a1.png">
