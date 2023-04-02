@@ -239,3 +239,63 @@ fly -t ci trigger-job -j sbot-pipeline/pull-repo-and-test-ssh
 Hopefully you'll see a successful build such as the below
 
 <img width="1085" alt="Screenshot 2023-04-01 at 15 27 27" src="https://user-images.githubusercontent.com/98178943/229295216-f33cf538-436a-46a7-8567-e0ecfe5579dc.png">
+
+## Create a test concourse job to push to github
+So, it's more of the same. Set up new yml, new pipeline etc.
+
+### Create new yml to deploy to a test github repo
+```
+resources:
+- name: sbot-repo
+  type: git
+  source:
+    uri: git@github.com:yfp-c/test.git
+    branch: main
+    private_key: ((SSH_PRIVATE_KEY))
+
+jobs:
+- name: push-changes-to-repo
+  plan:
+  - get: sbot-repo
+  - task: commit
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: concourse/buildroot
+          tag: git
+
+      inputs:
+      - name: sbot-repo
+
+      outputs:
+      - name: updated-sbot-repo
+
+      run:
+        path: /bin/bash
+        args:
+        - -cex
+        - |
+          set -eux
+
+          git clone sbot-repo updated-sbot-repo
+
+          cd updated-sbot-repo
+          echo "New content added by Concourse pipeline" >> my-text-file.txt
+
+          git add .
+
+          git config --global user.name "YOUR NAME"
+          git config --global user.email "YOUR EMAIL ADDRESS"
+
+          git commit -m "Update my-text-file.txt with new content"
+  - put: sbot-repo  
+    params: {repository: updated-sbot-repo}
+
+```
+### create new pipeline and add in variables etc
+```
+$ fly -t ci set-pipeline -p github-test-pipeline -c test-push-to-github.yml -v SSH_PRIVATE_KEY="$(cat path-to-private-key)"
+$ fly -t ci trigger-job -j github-test-pipeline/push-changes-to-repo
+```
