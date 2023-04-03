@@ -246,7 +246,7 @@ So, it's more of the same. Set up new yml, new pipeline etc.
 ### Create new yml to deploy to a test github repo
 ```
 resources:
-- name: sbot-repo
+- name: some-repo
   type: git
   source:
     uri: git@github.com:yfp-c/test.git
@@ -254,45 +254,45 @@ resources:
     private_key: ((SSH_PRIVATE_KEY))
 
 jobs:
-- name: push-changes-to-repo
+- name: push-text-file
   plan:
-  - get: sbot-repo
-  - task: commit
+  - get: some-repo
+    trigger: true
+  - task: update-text-file-and-push
     config:
       platform: linux
       image_resource:
         type: docker-image
         source:
-          repository: concourse/buildroot
-          tag: git
-
+          repository: debian
+          tag: stable-slim
       inputs:
-      - name: sbot-repo
-
+      - name: some-repo
       outputs:
-      - name: updated-sbot-repo
-
+      - name: some-modified-repo
       run:
-        path: /bin/bash
+        path: bash
         args:
-        - -cex
+        - -c
         - |
           set -eux
+          apt-get update -y
+          apt-get install -y git
+          git clone some-repo some-modified-repo
 
-          git clone sbot-repo updated-sbot-repo
-
-          cd updated-sbot-repo
-          echo "New content added by Concourse pipeline" >> my-text-file.txt
+          cd some-modified-repo
+          echo "new line" >> text.txt
 
           git add .
 
-          git config --global user.name "YOUR NAME"
-          git config --global user.email "YOUR EMAIL ADDRESS"
+          git config --global user.name "Name"
+          git config --global user.email "email@hotmail.com"
 
-          git commit -m "Update my-text-file.txt with new content"
-  - put: sbot-repo  
-    params: {repository: updated-sbot-repo}
+          git commit -m "Changed text.txt"
 
+  - put: some-repo
+    params: {repository: some-modified-repo}
+    
 ```
 ### create new pipeline and add in variables etc
 ```
