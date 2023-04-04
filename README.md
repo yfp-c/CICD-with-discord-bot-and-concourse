@@ -16,9 +16,20 @@
     + [Modify yml file to connect concourse ci to discord bot server](#modify-yml-file-to-connect-concourse-ci-to-discord-bot-server)
     + [export new ssh private key into env variable](#export-new-ssh-private-key-into-env-variable)
     + [set pipeline and trigger job](#set-pipeline-and-trigger-job)
+  * [Create a test concourse job to push to github](#create-a-test-concourse-job-to-push-to-github)
+    + [Create new yml to deploy to a test github repo](#create-new-yml-to-deploy-to-a-test-github-repo)
+    + [create new pipeline and add in variables etc](#create-new-pipeline-and-add-in-variables-etc)
+  * [Create a concourse job to pull changes from the discord bot server and push changes to github](#create-a-concourse-job-to-pull-changes-from-the-discord-bot-server-and-push-changes-to-github)
+    + [The yaml file](#the-yaml-file)
 
 # CICD-with-discord-bot-and-concourse-on-oracle
-I will attempt to do an end to end pipeline with the discord bot I have created using concourse as my pipeline
+~~I will attempt to do an end to end pipeline with the discord bot I have created using concourse as my pipeline~~
+I have created a concourse job to pull changes from the discord bot server and push it to github. 
+
+Future plans:
+
+- Unit testing
+- Automatically detect changes and push to github
 
 ## Set up concourse on a new ubuntu oracle server 
 1. First thing to do is run a few commands to open ports so you can ssh in
