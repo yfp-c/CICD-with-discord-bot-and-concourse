@@ -299,3 +299,74 @@ jobs:
 $ fly -t ci set-pipeline -p github-test-pipeline -c test-push-to-github.yml -v SSH_PRIVATE_KEY="$(cat path-to-private-key)"
 $ fly -t ci trigger-job -j github-test-pipeline/push-changes-to-repo
 ```
+
+## Create a concourse job to pull changes from the discord bot server and push changes to github
+
+### The yaml file
+Again, it's more of the same. Set up new yml, new pipeline etc. Combining what we've done in the steps above with some extra steps.
+Make sure to create a .gitignore file of the repo to where you'll be pushing to with the private key you'll be using to enter the discord bot server. In the example below, it would be 'id_rsa_discord_bot'.
+```
+resources:
+- name: some-repo
+  type: git
+  source:
+    uri: git@github.com:yfp-c/test.git
+    branch: main
+    private_key: ((SSH_PRIVATE_KEY))
+
+jobs:
+- name: push-text-file
+  plan:
+  - get: some-repo
+    trigger: true
+  - task: update-text-file-and-push
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: debian
+          tag: stable-slim
+
+      params:
+        DISCORD_BOT_SERVER_IP: xx.xx.xx.xx.xx.xx
+        DISCORD_BOT_SERVER_SSH_KEY: ((DISCORD_BOT_SERVER_SSH_KEY))
+
+      inputs:
+      - name: some-repo
+      outputs:
+      - name: some-modified-repo
+      run:
+        path: bash
+        args:
+        - -cex
+        - |
+          set -eux
+          apt-get update -y
+          apt-get install -y git rsync openssh-client
+          git clone some-repo some-modified-repo
+
+          cd some-modified-repo
+
+          echo "Testing SSH connection to the Discord sbot server"
+          echo "$DISCORD_BOT_SERVER_SSH_KEY" > id_rsa_discord_bot
+          chmod 600 id_rsa_discord_bot
+          mkdir -p ~/.ssh
+          ssh-keyscan $DISCORD_BOT_SERVER_IP >> ~/.ssh/known_hosts
+          rsync -avz -e "ssh -i id_rsa_discord_bot -o UserKnownHostsFile=~/.ssh/known_hosts" --exclude 'module.py' --exclude 'module.py' ubuntu@$DISCORD_BOT_SERVER_IP:/home/ubuntu/sbot/cogs/ cogs/
+
+          rm id_rsa_discord_bot
+
+          ls -a
+
+          git add .
+
+          git config --global user.name "NAME"
+          git config --global user.email "email@hotmail.com"
+
+          git commit -m "Added cogs test"
+
+
+  - put: some-repo
+    params: {repository: some-modified-repo}
+```
