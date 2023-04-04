@@ -24,6 +24,7 @@
 
 # CICD-with-discord-bot-and-concourse-on-oracle
 ~~I will attempt to do an end to end pipeline with the discord bot I have created using concourse as my pipeline~~
+
 I have created a concourse job to pull changes from the discord bot server and push it to github. 
 
 Future plans:
