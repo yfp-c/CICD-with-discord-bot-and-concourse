@@ -30,7 +30,8 @@ I have created a concourse job to pull changes from the discord bot server and p
 Future plans:
 
 - Unit testing
-- Automatically detect changes and push to github
+- Automatically detect changes on discord bot server and push to github
+- Update modules/cogs on the discord client without myself manually refreshing them
 
 ## Set up concourse on a new ubuntu oracle server 
 1. First thing to do is run a few commands to open ports so you can ssh in
