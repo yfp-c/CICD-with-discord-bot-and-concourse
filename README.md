@@ -33,6 +33,7 @@ Future plans:
 - Unit testing
 - Automatically detect changes on discord bot server and push to github
 - Update modules/cogs on the discord client without myself manually refreshing them
+- Containerize discord bot
 
 ## Useful commands
 ```
