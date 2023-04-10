@@ -1,4 +1,5 @@
 - [CICD-with-discord-bot-and-concourse-on-oracle](#cicd-with-discord-bot-and-concourse-on-oracle)
+  * [Useful commands]
   * [Set up concourse on a new ubuntu oracle server](#set-up-concourse-on-a-new-ubuntu-oracle-server)
   * [Setting up SSH connection between discord bot server and concourse ci server](#setting-up-ssh-connection-between-discord-bot-server-and-concourse-ci-server)
   * [Set up git(hub) on your concourse ci server](#set-up-git-hub--on-your-concourse-ci-server)
@@ -32,6 +33,22 @@ Future plans:
 - Unit testing
 - Automatically detect changes on discord bot server and push to github
 - Update modules/cogs on the discord client without myself manually refreshing them
+
+## Useful commands
+```
+fly -t ci login -c http://your-ip-address:8080
+
+fly -t <target> set-pipeline -p <pipeline-name> -c job.yml
+fly -t <target> unpause-pipeline -p <pipeline-name> 
+fly -t <target> pause-pipeline -p <pipeline-name> 
+
+export SSH_PRIVATE_KEY="$(cat /home/ubuntu/.ssh/id_rsa)"
+fly -t <target> set-pipeline -p <pipeline-name> -c job.yml --var "SSH_PRIVATE_KEY=$(echo $SSH_PRIVATE_KEY)"
+
+fly -t <target> trigger-job -j <pipeline-name>/job-name
+fly -t <target-name> destroy-pipeline -p <pipeline-name>
+
+```
 
 ## Set up concourse on a new ubuntu oracle server 
 1. First thing to do is run a few commands to open ports so you can ssh in
