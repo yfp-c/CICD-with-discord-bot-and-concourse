@@ -1,5 +1,5 @@
 - [CICD-with-discord-bot-and-concourse-on-oracle](#cicd-with-discord-bot-and-concourse-on-oracle)
-  * [Useful commands]
+  * [Useful commands](#Useful-commands)
   * [Set up concourse on a new ubuntu oracle server](#set-up-concourse-on-a-new-ubuntu-oracle-server)
   * [Setting up SSH connection between discord bot server and concourse ci server](#setting-up-ssh-connection-between-discord-bot-server-and-concourse-ci-server)
   * [Set up git(hub) on your concourse ci server](#set-up-git-hub--on-your-concourse-ci-server)
